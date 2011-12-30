@@ -143,7 +143,6 @@ public class NewsDatabaseAdapter implements HttpCallback {
 		
 		protected void onPostExecute(Boolean result) {
 			if(result){
-				Toast.makeText(context_, "Updated News Database", 1000).show();
 				returnHandler_.sendEmptyMessage(1);
 			}else{
 				returnHandler_.sendEmptyMessage(-1);

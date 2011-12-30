@@ -93,9 +93,6 @@ public class NewsActivity extends ListActivity {
 		if ((new Date().getTime() - lastUpdated_.getTime()) > 3600000) {
 			updateArticles();
 		}
-		if(!needUpdate){
-			Toast.makeText(this, "Update Not Needed for news Database", 1000).show();
-		}
 	}
 	
 	public void onDestroy() {
@@ -113,7 +110,6 @@ public class NewsActivity extends ListActivity {
 		DateFormat DF = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.MEDIUM);
 		String currentTimeFormatted = DF.format(lastUpdated_);
 		persistentDataDatabase_.updateData(4, "LAST_NEWS_UPDATE", currentTimeFormatted);
-		Toast.makeText(this, "News Database updating", 1000).show();
 	}
 
 	protected void onListItemClick(ListView l, View v, int position, long id) {

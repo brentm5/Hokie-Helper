@@ -99,7 +99,6 @@ public class HokieHelperMainActivity extends Activity implements
 				actionBar_.setTitle(DEFAULT_TITLE);
 			else
 				actionBar_.setTitle(lastConditions_);
-				Toast.makeText(this, "Updating Weather with cache", 1000).show();
 		}
 	}
 
@@ -148,7 +147,6 @@ public class HokieHelperMainActivity extends Activity implements
 	}
 
 	private void updateWeather() {
-		Toast.makeText(this, "Updating Weather online", 1000).show();
 		actionBar_.setTitle("Updating...");
 		String searchUrl = "http://mobile.srh.weather.gov/port_mp_ns.php?CityName=Blacksburg&site=RNK&State=VA&warnzone=VAZ014";
 		// String searchUrl =

@@ -152,7 +152,6 @@ public class InfoDatabaseAdapter implements HttpCallback {
 			if(result){
 				returnHandler_.sendEmptyMessage(2);
 			}else{
-				Toast.makeText(context_, "Databse Update Not Needed", 1000).show();
 				returnHandler_.sendEmptyMessage(0);
 			}
 		}
@@ -180,7 +179,6 @@ public class InfoDatabaseAdapter implements HttpCallback {
 		
 		protected void onPostExecute(Boolean result) {
 			if(result){
-				Toast.makeText(context_, "Info Database Updated", 1000).show();
 				returnHandler_.sendEmptyMessage(1);
 			}else{
 				returnHandler_.sendEmptyMessage(-1);

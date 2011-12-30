@@ -232,20 +232,9 @@ public class MapsDatabaseAdapter implements HttpCallback {
 				return false;
 			}
 		}
-		protected void onPostExecute(Boolean result) {
-			//Testing toast
-			if(result.booleanValue() == true && needUpdate == false) {
-				Toast.makeText(context_, "Database Update Not Needed", 1000).show();
-			}
-		}
 	}
 
 	private class UpdateDatabase extends AsyncTask<HttpResponse, Void, Boolean> {
-		
-		protected void onPreExecute() {
-			//testing toast
-			Toast.makeText(context_, "Buildings are being updated", 1000).show();
-		}
 		protected Boolean doInBackground(HttpResponse... params) {
 			try {
 				String responseBody = utils_.responseToString(params[0]);
@@ -263,12 +252,6 @@ public class MapsDatabaseAdapter implements HttpCallback {
 			} catch(Exception e) {
 				onError(e);
 				return false;
-			}
-		}
-		protected void onPostExecute(Boolean result) {
-			//Testing toast
-			if(result.booleanValue() == true) {
-				Toast.makeText(context_, "Buildings updated", 1000).show();
 			}
 		}
 	}
