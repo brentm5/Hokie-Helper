@@ -22,9 +22,10 @@ import android.widget.Toast;
  */
 public class PersistentDataDatabaseAdapter {
 
-	private static final String TAG = PersistentDataDatabaseAdapter.class.getName();
-	
-	public static final String KEY_ROWID = "id";
+	private static final String TAG = PersistentDataDatabaseAdapter.class
+			.getName();
+
+	public static final String KEY_ROWID = "_id";
 	public static final String KEY_KEY = "key";
 	public static final String KEY_VALUE = "value";
 	private static final String DATABASE_TABLE = "persistentData";
@@ -44,30 +45,37 @@ public class PersistentDataDatabaseAdapter {
 
 	public long updateData(int id, String key, String value) {
 		ContentValues initialValues = createContentValues(id, key, value);
-		Log.d(TAG, "Added data " + key + "With value " + value);
-		return database.insertWithOnConflict(DATABASE_TABLE, null, initialValues, SQLiteDatabase.CONFLICT_REPLACE);
+		Log.d(TAG, "Added data " + key + "with value " + value);
+		return database.insertWithOnConflict(DATABASE_TABLE, null,
+				initialValues, SQLiteDatabase.CONFLICT_REPLACE);
 	}
 
 	public boolean deleteRow(int rowId) {
 		return database.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
 	}
-	
+
 	public String fetchData(String key) {
 		Log.d(TAG, "Finding data with KEY " + key);
-		Cursor tempCursur = database.query(DATABASE_TABLE, new String[] { KEY_ROWID, KEY_KEY, KEY_VALUE }, KEY_KEY + "= '" + key + "'", null, null, null, null, null);
-		if(tempCursur.getCount() == 0){
-			return new String();
-		}else {
+		Cursor tempCursur = database.query(DATABASE_TABLE, new String[] {
+				KEY_ROWID, KEY_KEY, KEY_VALUE }, KEY_KEY + "= '" + key + "'",
+				null, null, null, null, null);
+		String str = new String();
+		if (tempCursur.getCount() == 0) {
+			tempCursur.close();
+			return str;
+		} else {
 			tempCursur.moveToFirst();
-			return tempCursur.getString(2);
+			str = tempCursur.getString(2);
+			tempCursur.close();
+			return str;
 		}
 	}
 
 	public boolean deleteAllData() {
 		return database.delete(DATABASE_TABLE, null, null) > 0;
 	}
-	
-	private ContentValues createContentValues(int id, String key,String value) {
+
+	private ContentValues createContentValues(int id, String key, String value) {
 		ContentValues values = new ContentValues();
 		values.put(KEY_ROWID, id);
 		values.put(KEY_KEY, key);
@@ -76,6 +84,8 @@ public class PersistentDataDatabaseAdapter {
 	}
 
 	public void close() {
-		dbHelper.close();
+		Log.d(TAG, "Closing persistent data database");
+		if(dbHelper != null)
+			dbHelper.close();
 	}
 }

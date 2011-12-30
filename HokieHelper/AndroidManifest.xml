@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    android:installLocation="auto"
     package="org.vt.hokiehelper"
     android:versionCode="1"
     android:versionName="1.0" >
@@ -14,39 +15,73 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar" >
+        <provider
+            android:authorities="org.vt.hokiehelper.buildingsprovider"
+            android:name="org.vt.hokiehelper.BuildingsProvider" />
+
         <uses-library android:name="com.google.android.maps" />
+
         <activity
             android:label="@string/app_name"
-            android:name=".HokieHelperMainActivity" >
+            android:launchMode="singleTask"
+            android:name=".HokieHelperMainActivity"
+            android:screenOrientation="portrait" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DiningActivity" >
+        <activity
+            android:launchMode="singleTask"
+            android:name=".DiningActivity" 
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".MapsActivity" >
+        <activity
+            android:launchMode="singleTask"
+            android:name=".MapsActivity" 
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".BuildingsActivity" />
-        </activity>
-        <activity android:name=".BuildingsActivity" >
-            <intent-filter >
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
+                android:value=".MapsActivity" />
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
+
+            <intent-filter >
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
         </activity>
-        <activity android:name=".FootballActivity" >
+        <activity
+            android:name=".BuildingsActivity" 
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".MapsActivity" />
         </activity>
-        <activity android:name=".RecSportsActivity" >
+        <activity
+            android:launchMode="singleTask"
+            android:name=".FootballActivity" 
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".NewsActivity" >
+        <activity
+            android:launchMode="singleTask"
+            android:name=".RecSportsActivity" 
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".InfoActivity" >
+        <activity
+            android:launchMode="singleTask"
+            android:name=".NewsActivity" 
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:launchMode="singleTask"
+            android:name=".InfoActivity" 
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".ArticleViewerActivity" 
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

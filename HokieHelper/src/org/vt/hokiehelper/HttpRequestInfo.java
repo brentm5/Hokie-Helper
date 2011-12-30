@@ -48,11 +48,10 @@ public class HttpRequestInfo {
 		response_ = response;
 	}
 
-	public void requestFinished(){
-		if(exception_ != null){
+	public void requestFinished() {
+		if (exception_ != null) {
 			callback_.onError(exception_);
-		}
-		else {
+		} else {
 			callback_.onResponse(response_);
 		}
 	}

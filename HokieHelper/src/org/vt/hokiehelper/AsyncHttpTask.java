@@ -14,8 +14,8 @@ public class AsyncHttpTask extends
 		HttpRequestInfo rInfo = params[0];
 		try {
 			DefaultHttpClient client = new DefaultHttpClient();
-//			RedirectHandler rHandler = new SpaceRedirectHandler();
-//			client.setRedirectHandler(rHandler);
+			// RedirectHandler rHandler = new SpaceRedirectHandler();
+			// client.setRedirectHandler(rHandler);
 			HttpResponse resp = client.execute(rInfo.getRequest());
 			rInfo.setResponse(resp);
 		} catch (Exception e) {

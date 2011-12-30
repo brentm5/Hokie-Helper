@@ -2,4 +2,6 @@
 <resources>
     <color name="actionbar_background_start">#911A1A</color>
     <color name="actionbar_background_end">#660000</color>
+    <color name="gray_divider">#C0C0C0</color>
+    <color name="maroon_divider">#660000</color>
 </resources>

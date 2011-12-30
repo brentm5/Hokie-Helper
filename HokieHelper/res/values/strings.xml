@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, HokieHelperMainActivity!</string>
-    <string name="app_name">HokieHelper</string>
-    <string name="search_hint">Search buildings...</string>
+    <string name="app_name">Hokie Helper</string>
+    <string name="search_hint">Search buildings</string>
 </resources>

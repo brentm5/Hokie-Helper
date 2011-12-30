@@ -11,8 +11,5 @@
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:dividerHeight="2dp"
-        android:divider="@color/maroon_divider" />
-
+        android:layout_height="wrap_content" />
 </LinearLayout>

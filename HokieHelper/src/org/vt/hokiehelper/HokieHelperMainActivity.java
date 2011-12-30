@@ -1,183 +1,207 @@
 package org.vt.hokiehelper;
 
-
 import java.text.DateFormat;
 import java.util.Date;
 
-
 import org.apache.http.HttpResponse;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import com.markupartist.android.widget.ActionBar;
-
 import android.app.Activity;
-import android.app.LauncherActivity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.text.format.Time;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.markupartist.android.widget.ActionBar;
+
 public class HokieHelperMainActivity extends Activity implements
-View.OnClickListener {
-    /** Called when the activity is first created. */
-	
+		View.OnClickListener, HttpCallback {
+	/** Called when the activity is first created. */
+
 	private static final String TAG = HokieHelperMainActivity.class.getName();
-	
-	//GUI Elements
+
+	private static final String DEFAULT_TITLE = "Hokie Helper - Menu";
+
+	// GUI Elements
 	private GridView mainMenu_;
+	private Handler handler_ = new Handler();
+	private HttpUtils utils_ = HttpUtils.get();
 	private ActionBar actionBar_;
 	private PersistentDataDatabaseAdapter persistentDataDatabase_;
-	private HttpUtils utils_;
 	private String lastConditions_;
 	private Date lastUpdated_;
-	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-    	Log.d(TAG, "Main Menu Activiy Created");
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        // Find the root view
-        
-        utils_ = HttpUtils.get(); //setup our http stack
 
-        mainMenu_ = (GridView) findViewById(R.id.mainMenu);
-        mainMenu_.setAdapter(new MainMenuGridAdapter(this));
-        actionBar_ = (ActionBar) findViewById(R.id.actionbar);
-        Log.d(TAG, "Setup GUI elements");
-        
-        //Setup the persistent database adapter
-        persistentDataDatabase_ = new PersistentDataDatabaseAdapter(this);
-        persistentDataDatabase_.open();
-        Log.d(TAG, "Opened Database");
-        
-        String lastUpdate = persistentDataDatabase_.fetchData("LAST_WEATHER_UPDATE");
-        //If there is no entry in the persistent data it will update the weather and add and entry
-        if( lastUpdate.equals("")){
-        	Log.d(TAG, "Weather last update variable not found so we update the weather");
-        	// then we need to setup the initial value of the date
-        	updateWeather();
-        }else {
-        	try{
-        		Log.d(TAG, "Weather last update variable found");
-        		lastUpdated_ = new Date( lastUpdate );
-        	}catch(Exception e) {
-        		Log.e(TAG, "An error in parsing the string occured" + lastUpdated_.getDate() + "hell  "+ lastUpdated_.toString(), e);
-        		updateWeather();
-        	}
-        	try {
-        		lastConditions_ = persistentDataDatabase_.fetchData("LAST_WEATHER_CONDITIONS");
-        		actionBar_.setTitle(lastConditions_);
-        	}catch(Exception e){
-        		Log.e(TAG, "An error in the database for some reason", e);
-        	}
-        }
-		actionBar_.setTitle(R.string.app_name);
-		
-		if((new Date().getTime() - lastUpdated_.getTime()) > 900000){
-			Log.d(TAG, "Weather Updated");
-			updateWeather();
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG, "Main Menu Activity Created");
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+		// Find the root view
+
+		mainMenu_ = (GridView) findViewById(R.id.mainMenu);
+		mainMenu_.setAdapter(new MainMenuGridAdapter(this));
+		actionBar_ = (ActionBar) findViewById(R.id.actionbar);
+		Log.d(TAG, "Setup GUI elements");
+
+		// Setup the persistent database adapter
+		persistentDataDatabase_ = new PersistentDataDatabaseAdapter(this);
+		persistentDataDatabase_.open();
+		Log.d(TAG, "Opened Database");
+
+		try {
+			lastConditions_ = persistentDataDatabase_.fetchData("LAST_WEATHER_CONDITIONS");
+		} catch (Exception e) {
+			Log.e(TAG, "An error in the database for some reason", e);
 		}
-    }
-    
-    @Override
-	protected void onStop() {
-		super.onStop();
+
+		String lastUpdate = persistentDataDatabase_	.fetchData("LAST_WEATHER_UPDATE");
+		// If there is no entry in the persistent data it will update the
+		// weather and add and entry
+		if (lastUpdate.equals("")) {
+			Log.d(TAG,
+					"Weather last update variable not found so we update the weather");
+			// then we need to setup the initial value of the date
+			updateWeather();
+		} else {
+			try {
+				Log.d(TAG, "Weather last update variable found");
+				lastUpdated_ = new Date(lastUpdate);
+			} catch (Exception e) {
+				Log.e(TAG, "An error in parsing the string to a date occured "
+						+ lastUpdate.toString(), e);
+				updateWeather(); // jsut redo it to make sure and reset the
+									// error
+			}
+		}
+
+		// set the title to the recent conditions or to the default title
+		if ((new Date().getTime() - lastUpdated_.getTime()) > 900000) {
+			updateWeather();
+		} else {
+			if (lastConditions_ == null || lastConditions_.equals(""))
+				actionBar_.setTitle(DEFAULT_TITLE);
+			else
+				actionBar_.setTitle(lastConditions_);
+		}
+	}
+
+	protected void onRestart() {
+		super.onRestart();
+		//persistentDataDatabase_.open();
+		if ((new Date().getTime() - lastUpdated_.getTime()) > 900000) {
+			updateWeather();
+		} else {
+			if (lastConditions_ == null || lastConditions_.equals(""))
+				actionBar_.setTitle(DEFAULT_TITLE);
+			else
+				actionBar_.setTitle(lastConditions_);
+				Toast.makeText(this, "Updating Weather with cache", 1000).show();
+		}
+	}
+
+	protected void onDestroy() {
+		super.onDestroy();
 		persistentDataDatabase_.close();
 	}
 
-	public void onStart() {
-    	super.onStart();
-    	persistentDataDatabase_.open();
-		if((new Date().getTime() - lastUpdated_.getTime()) > 900000){
-			updateWeather();
-		}else {
-    		actionBar_.setTitle(lastConditions_);
-		}
-    }
-    
-    public void onNewIntent(Intent newIntent) {
-    	setIntent(newIntent);
-    }
-
-    public void onClick(View v) {
-    	Log.d(TAG, "A list view was clicked");
-    	Intent nextActivity = null;
-    	switch (v.getId()) {
+	public void onClick(View v) {
+		Log.d(TAG, "A list view was clicked");
+		Intent nextActivity = null;
+		switch (v.getId()) {
 		case 0:
-			 nextActivity = new Intent(HokieHelperMainActivity.this,
-			 MapsActivity.class);	
+			nextActivity = new Intent(HokieHelperMainActivity.this,
+					MapsActivity.class);
 			break;
 		case 1:
 			nextActivity = new Intent(HokieHelperMainActivity.this,
-					 DiningActivity.class);
+					DiningActivity.class);
 			break;
 		case 2:
 			nextActivity = new Intent(HokieHelperMainActivity.this,
-					 NewsActivity.class);
+					NewsActivity.class);
 			break;
 		case 3:
 			nextActivity = new Intent(HokieHelperMainActivity.this,
-					 FootballActivity.class);
+					FootballActivity.class);
 			break;
 		case 4:
 			nextActivity = new Intent(HokieHelperMainActivity.this,
-					 RecSportsActivity.class);
+					RecSportsActivity.class);
 			break;
 		case 5:
 			nextActivity = new Intent(HokieHelperMainActivity.this,
-					 InfoActivity.class);
+					InfoActivity.class);
 			break;
 		default:
 
 			break;
 
-		};
-		if(nextActivity != null) {
+		}
+		;
+		if (nextActivity != null) {
 			startActivity(nextActivity);
 		}
-    }
-    
-	private void updateWeather() {
-		String searchUrl = "http://mobile.srh.weather.gov/port_mp_ns.php?CityName=Blacksburg&site=RNK&State=VA&warnzone=VAZ014";
-		//String searchUrl = "http://forecast.weather.gov/MapClick.php?lat=37.20800&lon=-80.40800&FcstType=dwml";
-		utils_.doGet(searchUrl, new WeatherCallback());
-		Log.d(TAG, "Sending get request to update weather");
-		lastUpdated_ = new Date();
-		DateFormat DF = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.MEDIUM);
-        String currentTimeFormatted = DF.format(lastUpdated_);
-        persistentDataDatabase_.updateData(1, "LAST_WEATHER_UPDATE", currentTimeFormatted);
 	}
-	
-	private class WeatherCallback implements HttpCallback {
-		public void onResponse(HttpResponse resp) {
+
+	private void updateWeather() {
+		Toast.makeText(this, "Updating Weather online", 1000).show();
+		actionBar_.setTitle("Updating...");
+		String searchUrl = "http://mobile.srh.weather.gov/port_mp_ns.php?CityName=Blacksburg&site=RNK&State=VA&warnzone=VAZ014";
+		// String searchUrl =
+		// "http://forecast.weather.gov/MapClick.php?lat=37.20800&lon=-80.40800&FcstType=dwml";
+		utils_.doGet(searchUrl, this);
+		Log.d(TAG, "Sending get request to update weather");
+
+		// Update the alst updated in the database
+		lastUpdated_ = new Date();
+		DateFormat DF = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
+				DateFormat.MEDIUM);
+		String currentTimeFormatted = DF.format(lastUpdated_);
+		persistentDataDatabase_.updateData(1, "LAST_WEATHER_UPDATE",
+				currentTimeFormatted);
+	}
+
+	public void onResponse(final HttpResponse resp) {
+		handler_.post(new WeatherParser(resp));
+	}
+
+	public void onError(Exception e) {
+		actionBar_.setTitle(DEFAULT_TITLE);
+		Log.e(TAG, "Error when getting weather: " + e.getLocalizedMessage());
+	}
+
+	// The weather parser runnable
+	private class WeatherParser implements Runnable {
+		private HttpResponse resp_;
+
+		public WeatherParser(HttpResponse resp) {
+			resp_ = resp;
+		}
+
+		public void run() {
 			Document doc = null;
 			try {
 				Log.d(TAG, "Weather Updated");
-				doc = Jsoup.parse(utils_.responseToString(resp));
+				doc = Jsoup.parse(utils_.responseToString(resp_));
 				Log.d(TAG, "Response gotten from request");
-				String forecast = doc.body().childNode(0).childNode(10).toString();
+				String forecast = doc.body().childNode(0).childNode(10)
+						.toString();
 				forecast = forecast.replace("&deg;", "\u00B0");
 				lastConditions_ = "Weather: " + forecast.replace(":", " -");
-				persistentDataDatabase_.updateData(2, "LAST_WEATHER_CONDITIONS", lastConditions_);
+				persistentDataDatabase_.updateData(2,
+						"LAST_WEATHER_CONDITIONS", lastConditions_);
 				actionBar_.setTitle(lastConditions_);
-				Toast t = Toast.makeText(getApplicationContext(), "Weather updated", 1000);
-				t.show();
 			} catch (Exception e) {
-				Log.e(TAG, "Error getting weather response: " + e.getLocalizedMessage());
+				Log.e(TAG,
+						"Error getting weather response: "
+								+ e.getLocalizedMessage());
+				actionBar_.setTitle(DEFAULT_TITLE);
 			}
 
-		}
-
-		public void onError(Exception e) {
-			Log.e(TAG, "Error when getting weather: " + e.getLocalizedMessage());
 		}
 	}
 }
