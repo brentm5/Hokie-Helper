@@ -46,7 +46,10 @@ public class HokieHelperMainActivity extends Activity implements
 		mainMenu_.setAdapter(new MainMenuGridAdapter(this));
 		actionBar_ = (ActionBar) findViewById(R.id.actionbar);
 		Log.d(TAG, "Setup GUI elements");
-
+		
+		Eula.show(this);
+		Log.d(TAG, "Show EULA if need be");
+		
 		// Setup the persistent database adapter
 		persistentDataDatabase_ = new PersistentDataDatabaseAdapter(this);
 		persistentDataDatabase_.open();
