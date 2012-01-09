@@ -14,12 +14,13 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
-import android.widget.Toast;
 
+import com.google.ads.AdRequest;
+import com.google.ads.AdView;
 import com.markupartist.android.widget.ActionBar;
 
 public class HokieHelperMainActivity extends Activity implements
-		View.OnClickListener, HttpCallback {
+View.OnClickListener, HttpCallback {
 	/** Called when the activity is first created. */
 
 	private static final String TAG = HokieHelperMainActivity.class.getName();
@@ -40,16 +41,20 @@ public class HokieHelperMainActivity extends Activity implements
 		Log.d(TAG, "Main Menu Activity Created");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		// Find the root view
 
+		// Find the root view
 		mainMenu_ = (GridView) findViewById(R.id.mainMenu);
 		mainMenu_.setAdapter(new MainMenuGridAdapter(this));
 		actionBar_ = (ActionBar) findViewById(R.id.actionbar);
 		Log.d(TAG, "Setup GUI elements");
-		
+
 		Eula.show(this);
 		Log.d(TAG, "Show EULA if need be");
-		
+
+		// Look up the AdView as a resource and load a request.
+//		AdView adView = (AdView) findViewById(R.id.adView);
+//		adView.loadAd(new AdRequest());
+
 		// Setup the persistent database adapter
 		persistentDataDatabase_ = new PersistentDataDatabaseAdapter(this);
 		persistentDataDatabase_.open();
@@ -66,7 +71,7 @@ public class HokieHelperMainActivity extends Activity implements
 		// weather and add and entry
 		if (lastUpdate.equals("")) {
 			Log.d(TAG,
-					"Weather last update variable not found so we update the weather");
+			"Weather last update variable not found so we update the weather");
 			// then we need to setup the initial value of the date
 			updateWeather();
 		} else {
@@ -77,7 +82,7 @@ public class HokieHelperMainActivity extends Activity implements
 				Log.e(TAG, "An error in parsing the string to a date occured "
 						+ lastUpdate.toString(), e);
 				updateWeather(); // jsut redo it to make sure and reset the
-									// error
+				// error
 			}
 		}
 
@@ -190,7 +195,7 @@ public class HokieHelperMainActivity extends Activity implements
 				doc = Jsoup.parse(utils_.responseToString(resp_));
 				Log.d(TAG, "Response gotten from request");
 				String forecast = doc.body().childNode(0).childNode(10)
-						.toString();
+				.toString();
 				forecast = forecast.replace("&deg;", "\u00B0");
 				lastConditions_ = "Weather: " + forecast.replace(":", " -");
 				persistentDataDatabase_.updateData(2,
@@ -199,7 +204,7 @@ public class HokieHelperMainActivity extends Activity implements
 			} catch (Exception e) {
 				Log.e(TAG,
 						"Error getting weather response: "
-								+ e.getLocalizedMessage());
+						+ e.getLocalizedMessage());
 				actionBar_.setTitle(DEFAULT_TITLE);
 			}
 

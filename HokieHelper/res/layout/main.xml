@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     android:id="@+id/main_menu_linear_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -16,10 +17,10 @@
     -->
 
     <GridView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/mainMenu"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:columnWidth="90dp"
         android:gravity="center"
         android:horizontalSpacing="20dp"
@@ -27,5 +28,14 @@
         android:paddingTop="20dp"
         android:stretchMode="columnWidth"
         android:verticalSpacing="10dp" />
+
+    <com.google.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="a14f0362ad293b9"
+        ads:loadAdOnCreate="true"
+        ads:testDevices="TEST_EMULATOR, C007F9B33BB4C8DA2C05ABA9E33DE92F" />
 
 </LinearLayout>
