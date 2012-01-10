@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
@@ -7,14 +8,23 @@
     <com.markupartist.android.widget.ActionBar
         android:id="@+id/actionbar"
         style="@style/ActionBar" />
-    
+
     <com.google.android.maps.MapView
         android:id="@+id/map"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight=".9"
         android:apiKey="0rZBJu0jdOcFhbja8fvrIuQRDoWMRVdGAQKrFrA"
         android:clickable="true"
         android:enabled="true" />
 
-    
+    <com.google.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="a14f0362ad293b9"
+        ads:loadAdOnCreate="true"
+        ads:testDevices="TEST_EMULATOR, C007F9B33BB4C8DA2C05ABA9E33DE92F" />
+
 </LinearLayout>

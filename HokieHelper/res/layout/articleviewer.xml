@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
@@ -11,7 +12,8 @@
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:scrollbars="vertical" >
 
         <LinearLayout
@@ -20,8 +22,8 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingLeft="15dp"
-            android:paddingRight="15dp" 
-            android:paddingTop="20dp">
+            android:paddingRight="15dp"
+            android:paddingTop="20dp" >
 
             <TextView
                 android:id="@+id/article_viewer_title"
@@ -60,11 +62,20 @@
                 android:id="@+id/article_viewer_body"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:lineSpacingMultiplier="2"
                 android:paddingTop="10dp"
                 android:text=""
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:lineSpacingMultiplier="2" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
     </ScrollView>
+
+    <com.google.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="a14f0362ad293b9"
+        ads:loadAdOnCreate="true"
+        ads:testDevices="TEST_EMULATOR, C007F9B33BB4C8DA2C05ABA9E33DE92F" />
 
 </LinearLayout>
