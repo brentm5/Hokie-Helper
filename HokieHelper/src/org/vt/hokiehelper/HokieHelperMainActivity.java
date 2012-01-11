@@ -35,6 +35,7 @@ View.OnClickListener, HttpCallback {
 	private PersistentDataDatabaseAdapter persistentDataDatabase_;
 	private String lastConditions_;
 	private Date lastUpdated_;
+	private AdView adView_;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,14 +47,12 @@ View.OnClickListener, HttpCallback {
 		mainMenu_ = (GridView) findViewById(R.id.mainMenu);
 		mainMenu_.setAdapter(new MainMenuGridAdapter(this));
 		actionBar_ = (ActionBar) findViewById(R.id.actionbar);
+		// Look up the AdView as a resource and load a request.
+		//adView_ = (AdView) findViewById(R.id.adView);
 		Log.d(TAG, "Setup GUI elements");
 
 		Eula.show(this);
-		Log.d(TAG, "Show EULA if need be");
-
-		// Look up the AdView as a resource and load a request.
-//		AdView adView = (AdView) findViewById(R.id.adView);
-//		adView.loadAd(new AdRequest());
+		Log.d(TAG, "Show EULA if need b");
 
 		// Setup the persistent database adapter
 		persistentDataDatabase_ = new PersistentDataDatabaseAdapter(this);
@@ -95,6 +94,7 @@ View.OnClickListener, HttpCallback {
 			else
 				actionBar_.setTitle(lastConditions_);
 		}
+		//adView_.loadAd(new AdRequest());
 	}
 
 	protected void onRestart() {
@@ -147,8 +147,7 @@ View.OnClickListener, HttpCallback {
 
 			break;
 
-		}
-		;
+		};
 		if (nextActivity != null) {
 			startActivity(nextActivity);
 		}

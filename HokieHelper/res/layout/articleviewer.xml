@@ -76,6 +76,6 @@
         ads:adSize="BANNER"
         ads:adUnitId="a14f0362ad293b9"
         ads:loadAdOnCreate="true"
-        ads:testDevices="TEST_EMULATOR, C007F9B33BB4C8DA2C05ABA9E33DE92F" />
+        ads:testDevices="TEST_EMULATOR, C007F9B33BB4C8DA2C05ABA9E33DE92F, 3535D733F08800EC" />
 
 </LinearLayout>

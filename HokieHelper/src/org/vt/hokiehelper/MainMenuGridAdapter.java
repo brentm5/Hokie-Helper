@@ -38,22 +38,18 @@ public class MainMenuGridAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View MyView = convertView;
 		Log.d(TAG, "Setting up menu item " + text_[position]);
-		if (convertView == null) {
-			// we define the view that will display on the grid
-			// Inflate the layout
-			LayoutInflater li = (LayoutInflater) context_
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			MyView = li.inflate(R.layout.main_menu_grid_item, null);
-			MyView.setPadding(8, 0, 8, 8);
-			MyView.setOnClickListener((OnClickListener) context_);
-			MyView.setId(position);
-			TextView tv = (TextView) MyView.findViewById(R.id.grid_item_text);
-			tv.setPadding(0, 0, 0, 8);
-			ImageView iv = (ImageView) MyView
-					.findViewById(R.id.grid_item_image);
-			tv.setText(text_[position]);
-			iv.setImageResource(images_[position]);
-		}
+		// we define the view that will display on the grid
+		// Inflate the layout
+		LayoutInflater li = (LayoutInflater) context_.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		MyView = li.inflate(R.layout.main_menu_grid_item, null);
+		MyView.setPadding(8, 0, 8, 8);
+		MyView.setOnClickListener((OnClickListener) context_);
+		MyView.setId(position);
+		TextView tv = (TextView) MyView.findViewById(R.id.grid_item_text);
+		tv.setPadding(0, 0, 0, 4);
+		ImageView iv = (ImageView) MyView.findViewById(R.id.grid_item_image);
+		tv.setText(text_[position]);
+		iv.setImageResource(images_[position]);
 		return MyView;
 	}
 

@@ -3,7 +3,6 @@
 	<name>HokieHelper</name>
 	<comment></comment>
 	<projects>
-		<project>actionbar</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
