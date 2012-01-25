@@ -38,6 +38,7 @@ public class MainMenuGridAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View MyView = convertView;
 		Log.d(TAG, "Setting up menu item " + text_[position]);
+		
 		// we define the view that will display on the grid
 		// Inflate the layout
 		LayoutInflater li = (LayoutInflater) context_.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
