@@ -11,6 +11,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -25,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +40,8 @@ public class RecSportsActivity extends ListActivity implements HttpCallback {
 	private ActionBar actionBar_;
 	private HttpUtils utils_ = HttpUtils.get();
 	private ProgressDialog p_;
+	private AlertDialog classInfo_;
+	private ArrayList<HashMap<String, Object>> classes_;
 
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "Rec Sports Activity Created");
@@ -53,6 +57,13 @@ public class RecSportsActivity extends ListActivity implements HttpCallback {
 		Action refreshAction = new IntentAction(this, ActionBarHelper.createRefreshIntent(this, this.getClass()), R.drawable.refresh_button);
 		actionBar_.addAction(refreshAction);
 		refresh();
+		classInfo_ = new AlertDialog.Builder(this).setCancelable(true).create();
+	}
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		HashMap<String, Object> curClass = classes_.get(position);
+		classInfo_.setTitle((String)curClass.get("name"));
+		classInfo_.setMessage((String) (curClass.get("building") + " - " + curClass.get("classroom")));
+		classInfo_.show();
 	}
 
 	private void refresh() {
@@ -87,8 +98,7 @@ public class RecSportsActivity extends ListActivity implements HttpCallback {
 			p_.dismiss();
 	}
 
-	private class UpdateClassesTask extends
-	AsyncTask<HttpResponse, Void, ArrayList <HashMap<String, Object>>> {
+	private class UpdateClassesTask extends AsyncTask<HttpResponse, Void, ArrayList <HashMap<String, Object>>> {
 
 		Context context_;
 		
@@ -141,6 +151,7 @@ public class RecSportsActivity extends ListActivity implements HttpCallback {
 		
 		protected void onPostExecute(ArrayList <HashMap<String, Object>> result) {
 			ListAdapter adapter = new ClassesAdapter(result,context_);
+			classes_ = result;
 			setListAdapter(adapter);
 			// Expecting that p_ is shown when we first send off the doGet to httputils
 			if(p_.isShowing())
